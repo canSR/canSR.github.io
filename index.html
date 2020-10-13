@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <img src=http://www.unistra.fr/fileadmin/_processed_/b/d/csm_Faculte_Physique_Etroit_Couleur_99fbbfd582.png alt=”alternate text” title=”infotip text” height=70 width=160 <h2> Data measurement-Can ESER</h2>
+</head>
+  
+<body>
+  <div id="header">
+  <!--<h2>Data measurement-Can ESER</h2>-->
+  </div>
+  <div class="my-content">
+    <h3>Battery values:</h3>
+    <div id="BatteryCondition"></div>
+    <h3>Motor values:</h3>
+    <div id="assistanceIndicator"></div>
+    <div id="range"></div>
+    <div id="driveMode"></div>
+    <div id="userPower"></div>
+    <h3>User specific values:</h3>
+    <div id="speed"></div>
+    <div id="heartRateAvailability"></div>
+    <div id="heartRate"></div>
+    <div id="cadence"></div>
+    <div id="ascent"></div>
+    <h3>GPS Coordinates:</h3>
+    <div id="latitude"></div>
+    <div id="longitude"></div>
+    <div id="altitude"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+  <!-- COBI.JS -->
+  <script src="https://cdn.cobi.bike/cobi.js/0.44.0/cobi.js"></script>
+  <script>
+
+    // Authenticate your module
+    COBI.init('token');
+    
+    // Baterry values measurement-------------------------------------------------------------------------
+      // State of charge measurement
+    COBI.battery.state.subscribe(function(BatteryCondition) {
+      batteryLevel = JSON.stringify(BatteryCondition.batteryLevel)
+      $('#BatteryCondition').html(`SOC: ${batteryLevel} %`)
+    });
+
+    // Motor values measurement----------------------------------------------------------------------- 
+      // Assistance indicator
+    COBI.motor.assistanceIndicator.subscribe(function(assistanceIndicator) {
+      $('#assistanceIndicator').html(`Utilization level of set drive mode: ${assistanceIndicator} %`)
+    });
+
+      // Range
+    COBI.motor.range.subscribe(function(range) {
+      $('#range').html(`Predicted distance with this support level: ${range} km`)
+    });
+
+      // Drive Mode
+    COBI.motor.driveMode.subscribe(function(driveMode) {
+      $('#driveMode').html(`Drive Mode: ${driveMode}`)
+    });
+
+    // User values measuremet-------------------------------------------------------------------
+      // Speed
+    COBI.rideService.speed.subscribe(function(speed) {
+      speed=speed*3.6
+      $('#speed').html(`Speed: ${speed.toFixed(2)} km/h`)
+    });
+
+    // User Power measurement
+    COBI.rideService.userPower.subscribe(function(userPower) {
+      $('#userPower').html(`User Power: ${userPower} W`)
+    });
+
+    // Heart rate 
+    COBI.rideService.heartRate.subscribe(function(heartRate) {
+      $('#heartRate').html(`Heart rate: ${heartRate} bpm`)
+    });
+
+    // Hear Rate Sensor Availability
+    COBI.rideService.heartRateAvailability.subscribe(function(heartRateAvailability) {
+      $('#heartRateAvailability').html(`Heart Rate Sensor Availability: ${heartRateAvailability}`)
+    }); 
+
+    // Cadence
+    COBI.rideService.cadence.subscribe(function(cadence) {
+      $('#cadence').html(`Cadence: ${cadence} rpm`)
+    });
+
+    // Ascent
+    COBI.tourService.ascent.subscribe(function(ascent) {
+      $('#ascent').html(`Ascent: ${ascent.toFixed(2)} m`)
+    });
+      
+    // GPS coordinates measurement------------------------------------------------------------
+    COBI.mobile.location.subscribe(function(location) {
+      latitude = JSON.stringify(location.coordinate.latitude);
+      $('#latitude').html(`Latitude: ${latitude}`)
+    });
+    COBI.mobile.location.subscribe(function(location) {
+      longitude = JSON.stringify(location.coordinate.longitude);
+      $('#longitude').html(`Longitude: ${longitude}`)
+    });
+    COBI.mobile.location.subscribe(function(location) {
+      altitude = JSON.stringify(location.altitude);
+      $('#altitude').html(`Altitude: ${altitude}`)
+    });
+  </script>
+  
+</body>
+</html>
